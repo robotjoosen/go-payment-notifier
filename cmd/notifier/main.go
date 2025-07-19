@@ -12,21 +12,18 @@ import (
 	"gitlab.com/sir-this-is-a-wendys/go-payment-notifier/pkg/bunq"
 	"gitlab.com/sir-this-is-a-wendys/go-payment-notifier/pkg/health"
 	"gitlab.com/sir-this-is-a-wendys/go-payment-notifier/pkg/server"
+	"gitlab.com/sir-this-is-a-wendys/go-payment-notifier/pkg/setup"
 	"gitlab.com/sir-this-is-a-wendys/go-payment-notifier/pkg/shutdown"
 	"gitlab.com/sir-this-is-a-wendys/go-payment-notifier/pkg/sound"
 )
 
 func main() {
-	e := loadEnv()
-	initLog(e.LogLevel)
+	e := setup.LoadEnv()
+	setup.InitLog(e.LogLevel)
 
 	slog.Info("using environment", "configuration", e)
 
-	bunqInstance := bunq.New(
-		bunq.WithBaseURL(e.BunqBaseURL),
-		bunq.WithAPIKey(e.BunqAPIKey),
-		bunq.WithAppName(e.BunqAppName),
-	)
+	bunqInstance := bunq.New()
 	if bunqInstance == nil {
 		slog.Error("failed to initialise bunq instance")
 

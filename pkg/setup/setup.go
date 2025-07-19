@@ -1,4 +1,4 @@
-package main
+package setup
 
 import (
 	"log/slog"
@@ -34,7 +34,7 @@ type Environment struct {
 	OscAddress  string     `mapstructure:"OSC_ADDRESS"`
 }
 
-func initLog(level slog.Level) {
+func InitLog(level slog.Level) {
 	hostname, err := os.Hostname()
 	if err != nil {
 		os.Exit(1)
@@ -46,7 +46,7 @@ func initLog(level slog.Level) {
 		))
 }
 
-func loadEnv() Environment {
+func LoadEnv() Environment {
 	e, err := env.Load[Environment](map[string]any{
 		"MODE":          defaultMode,
 		"LOG_LEVEL":     defaultLogLevel,

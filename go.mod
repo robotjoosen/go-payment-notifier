@@ -7,6 +7,7 @@ require (
 	github.com/anthdm/hollywood v1.0.5
 	github.com/go-viper/mapstructure/v2 v2.4.0
 	github.com/google/uuid v1.6.0
+	github.com/hypebeast/go-osc v0.0.0-20220308234300-cec5a8a1e5f5
 	github.com/spf13/viper v1.20.1
 )
 
@@ -14,7 +15,6 @@ require (
 	github.com/DataDog/gostackparse v0.7.0 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/fsnotify/fsnotify v1.8.0 // indirect
-	github.com/hypebeast/go-osc v0.0.0-20220308234300-cec5a8a1e5f5 // indirect
 	github.com/klauspost/cpuid/v2 v2.0.9 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.3 // indirect
 	github.com/pkg/errors v0.8.1 // indirect

@@ -1,7 +1,10 @@
 package bunq
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
+	"fmt"
 	"log/slog"
 	"net/http"
 	"strings"
@@ -23,37 +26,86 @@ const (
 	callbackPathMutation = "mutation/callback"
 )
 
-func New(optionFuncs ...OptionFunc) *Controller {
+func New() *Controller {
+	// connect tp bunq
+
+	return &Controller{
+		outputChannel: make(chan any, 100),
+	}
+}
+
+func (c *Controller) Connect(optionFuncs ...OptionFunc) error {
 	options := getDefaultOptions()
 	for _, optionFunc := range optionFuncs {
 		optionFunc(&options)
 	}
 
-	// connect tp bunq
 	key, err := bunqclient.CreateNewKeyPair()
 	if err != nil {
 		slog.Error("failed to new key pair", "err", err.Error())
 
-		return nil
+		return err
 	}
-
-	c := bunqclient.NewClient(
+	c.client = bunqclient.NewClient(
 		context.Background(),
 		options.baseURL,
 		key,
 		options.apiKey,
 		options.appName,
 	)
-	if err := c.Init(); err != nil {
+	if err := c.client.Init(); err != nil {
 		slog.Error("failed to initialize bunq client", "err", err.Error())
 
-		return nil
+		return err
 	}
 
-	return &Controller{
-		outputChannel: make(chan any, 100),
-		client:        c,
+	return nil
+}
+
+func (c *Controller) SetNotificationWebhook() error {
+	accounts, err := c.client.AccountService.GetMonetaryAccountBank(1)
+	if err != nil {
+		return err
 	}
+
+	userID, err := c.client.GetUserID()
+	if err != nil {
+		return err
+	}
+
+	n := NotificationFilters{
+		NotificationFilter: []NotificationFilter{
+			{
+				Category:           "PAYMENT",
+				NotificationTarget: "http://127.0.0.1/payment/callback",
+			},
+			{
+				Category:           "MUTATION",
+				NotificationTarget: "http://127.0.0.1/mutation/callback",
+			},
+		},
+	}
+
+	rawNotificationFilters, err := json.Marshal(n)
+	if err != nil {
+		return err
+	}
+
+	for _, account := range accounts.Response {
+		if _, err := c.client.Post(
+			fmt.Sprintf(
+				"/v1/user/%d/monetary-account/%d/notification-filter-url",
+				userID,
+				account.MonetaryAccountBank.ID,
+			),
+			"application/json",
+			bytes.NewBuffer(rawNotificationFilters),
+		); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (c *Controller) Handler() http.HandlerFunc {
