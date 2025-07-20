@@ -2,23 +2,26 @@
 
 Play a sounds when a payment is done
 
-## Binary
+## Build
 
-```
-make binary-build
+| type  | command  |
+|---|---|
+| docker | `make docker-build` |
+| binary | `make binary-build` |
 
-cp ./.env.dist ./.env
+## Run
 
-./bin/notifier
-```
-
-## Docker
-
-```
-make docker-build
-
-cp ./.env.dist ./.env
-
-./bin/notifier
-```
-
+1. Create `.env` by copying `.env.dist`
+  ``` shell
+  cp .env.dist .env
+  ```
+2. Start notifier
+  - Docker: 
+    ``` shell
+    make docker-run
+    ```
+  - Binary:
+    ``` shell
+    ./bin/notifier
+    ```
+ 
