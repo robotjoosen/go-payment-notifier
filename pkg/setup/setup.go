@@ -33,7 +33,6 @@ type Environment struct {
 	BunqAppName    string     `mapstructure:"BUNQ_APP_NAME"`
 	OscIP          string     `mapstructure:"OSC_IP"`
 	OscPort        int        `mapstructure:"OSC_PORT"`
-	OscAddress     string     `mapstructure:"OSC_ADDRESS"`
 	OscPaymentCue  string     `mapstructure:"OSC_PAYMENT_CUE"`
 	OscMutationCue string     `mapstructure:"OSC_MUTATION_CUE"`
 }
@@ -61,7 +60,6 @@ func LoadEnv() Environment {
 		"BUNQ_APP_NAME":    defaultServiceName,
 		"OSC_IP":           defaultOSCIP,
 		"OSC_PORT":         defaultOSCPort,
-		"OSC_ADDRESS":      defaultOSCAddress,
 		"OSC_PAYMENT_CUE":  defaultOSCPaymentCue,
 		"OSC_MUTATION_CUE": defaultOSCMutationCue,
 	},
