@@ -2,18 +2,23 @@
 
 Play a sounds when a payment is done
 
-## Build
+## Binary
 
 ```
-make build
-```
+make binary-build
 
-## Run
-
-```
 cp ./.env.dist ./.env
-```
 
-```
 ./bin/notifier
 ```
+
+## Docker
+
+```
+make docker-build
+
+cp ./.env.dist ./.env
+
+./bin/notifier
+```
+
