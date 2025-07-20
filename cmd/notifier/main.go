@@ -52,6 +52,7 @@ func main() {
 		"/payment/callback":  bunqInstance.Handler(),
 		"/mutation/callback": bunqInstance.Handler(),
 	})
+	go serverInstance.Run()
 
 	// connect services to internal message bus
 	actorEngine := broadcaster.New()
