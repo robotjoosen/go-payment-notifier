@@ -24,4 +24,13 @@ Play a sounds when a payment is done
     ``` shell
     ./bin/notifier
     ```
- 
+
+## Interact
+
+| endpoint  | description |
+|---|---|
+| `/health` | health endpoint that can be used for docker or k8s |
+| `/shutdown` | gracefuly shutdown service through endpoint |
+| `/callbacks/payment` | callback endpoint for handling bunq payment callbacks |
+| `/callbacks/mutation` | callback endpoint for handling bunq mutation callbacks |
+
