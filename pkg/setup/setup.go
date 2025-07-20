@@ -11,27 +11,31 @@ import (
 const (
 	modeDevelopment = "DEV"
 
-	defaultMode        = modeDevelopment
-	defaultLogLevel    = "INFO"
-	defaultServerPort  = 8080
-	defaultServiceName = "payment-notifier"
-	defaultOSCAddress  = "/osc/address"
-	defaultOSCIP       = "127.0.0.1"
-	defaultOSCPort     = 8765
-	defaultBunqBaseURL = bunq.BaseURLProduction
+	defaultMode           = modeDevelopment
+	defaultLogLevel       = "INFO"
+	defaultServerPort     = 8080
+	defaultServiceName    = "payment-notifier"
+	defaultOSCAddress     = "/osc/address"
+	defaultOSCIP          = "127.0.0.1"
+	defaultOSCPort        = 8765
+	defaultOSCPaymentCue  = 1
+	defaultOSCMutationCue = 2
+	defaultBunqBaseURL    = bunq.BaseURLProduction
 )
 
 type Environment struct {
-	Mode        string     `mapstructure:"MODE"`
-	LogLevel    slog.Level `mapstructure:"LOG_LEVEL"`
-	ServiceName string     `mapstructure:"SERVICE_NAME"`
-	ServerPort  int        `mapstructure:"SERVER_PORT"`
-	BunqBaseURL string     `mapstructure:"BUNQ_BASE_URL"`
-	BunqAPIKey  string     `mapstructure:"BUNQ_API_KEY"`
-	BunqAppName string     `mapstructure:"BUNQ_APP_NAME"`
-	OscIP       string     `mapstructure:"OSC_IP"`
-	OscPort     int        `mapstructure:"OSC_PORT"`
-	OscAddress  string     `mapstructure:"OSC_ADDRESS"`
+	Mode           string     `mapstructure:"MODE"`
+	LogLevel       slog.Level `mapstructure:"LOG_LEVEL"`
+	ServiceName    string     `mapstructure:"SERVICE_NAME"`
+	ServerPort     int        `mapstructure:"SERVER_PORT"`
+	BunqBaseURL    string     `mapstructure:"BUNQ_BASE_URL"`
+	BunqAPIKey     string     `mapstructure:"BUNQ_API_KEY"`
+	BunqAppName    string     `mapstructure:"BUNQ_APP_NAME"`
+	OscIP          string     `mapstructure:"OSC_IP"`
+	OscPort        int        `mapstructure:"OSC_PORT"`
+	OscAddress     string     `mapstructure:"OSC_ADDRESS"`
+	OscPaymentCue  string     `mapstructure:"OSC_PAYMENT_CUE"`
+	OscMutationCue string     `mapstructure:"OSC_MUTATION_CUE"`
 }
 
 func InitLog(level slog.Level) {
@@ -48,16 +52,18 @@ func InitLog(level slog.Level) {
 
 func LoadEnv() Environment {
 	e, err := env.Load[Environment](map[string]any{
-		"MODE":          defaultMode,
-		"LOG_LEVEL":     defaultLogLevel,
-		"SERVICE_NAME":  defaultServiceName,
-		"SERVER_PORT":   defaultServerPort,
-		"BUNQ_BASE_URL": defaultBunqBaseURL,
-		"BUNQ_API_KEY":  "",
-		"BUNQ_APP_NAME": defaultServiceName,
-		"OSC_IP":        defaultOSCIP,
-		"OSC_PORT":      defaultOSCPort,
-		"OSC_ADDRESS":   defaultOSCAddress,
+		"MODE":             defaultMode,
+		"LOG_LEVEL":        defaultLogLevel,
+		"SERVICE_NAME":     defaultServiceName,
+		"SERVER_PORT":      defaultServerPort,
+		"BUNQ_BASE_URL":    defaultBunqBaseURL,
+		"BUNQ_API_KEY":     "",
+		"BUNQ_APP_NAME":    defaultServiceName,
+		"OSC_IP":           defaultOSCIP,
+		"OSC_PORT":         defaultOSCPort,
+		"OSC_ADDRESS":      defaultOSCAddress,
+		"OSC_PAYMENT_CUE":  defaultOSCPaymentCue,
+		"OSC_MUTATION_CUE": defaultOSCMutationCue,
 	},
 		func(e *Environment) {
 			if e.Mode == modeDevelopment && e.BunqBaseURL == "" {

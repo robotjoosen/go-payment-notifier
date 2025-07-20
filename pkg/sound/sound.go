@@ -1,6 +1,7 @@
 package sound
 
 import (
+	"fmt"
 	"log/slog"
 
 	"github.com/google/uuid"
@@ -8,10 +9,13 @@ import (
 	"gitlab.com/sir-this-is-a-wendys/go-payment-notifier/pkg/domain"
 )
 
+const cueStartPath = "/cue/%s/start"
+
 type Controller struct {
 	identifier    uuid.UUID
 	client        *osc.Client
-	address       string
+	paymentCue    string
+	mutationCue   string
 	outputChannel chan any
 }
 
@@ -30,7 +34,8 @@ func New(optionFuncs ...OptionFunc) *Controller {
 
 	return &Controller{
 		client:        c,
-		address:       options.address,
+		paymentCue:    options.paymentCue,
+		mutationCue:   options.mutationCue,
 		outputChannel: make(chan any, 100),
 	}
 }
@@ -46,15 +51,35 @@ func (c *Controller) Identifier() uuid.UUID {
 func (c *Controller) Input(msg any) {
 	switch msg.(type) {
 	case domain.PaymentCallbackEvent:
-		msg := osc.NewMessage(c.address)
-		msg.Append(1)
+		msg := osc.NewMessage(fmt.Sprintf(cueStartPath, c.paymentCue))
 
-		c.client.Send(msg)
+		if err := c.client.Send(msg); err != nil {
+			slog.Error("send failed",
+				slog.String("err", err.Error()),
+				slog.Any("msg", msg),
+			)
+
+			return
+		}
+
+		slog.Info("Payment callback event triggered",
+			slog.Any("msg", msg),
+		)
 	case domain.MutationCallbackEvent:
-		msg := osc.NewMessage(c.address)
-		msg.Append(2)
+		msg := osc.NewMessage(fmt.Sprintf(cueStartPath, c.mutationCue))
 
-		c.client.Send(msg)
+		if err := c.client.Send(msg); err != nil {
+			slog.Error("send failed",
+				slog.String("err", err.Error()),
+				slog.Any("msg", msg),
+			)
+
+			return
+		}
+
+		slog.Info("Mutation callback triggered",
+			slog.Any("msg", msg),
+		)
 	}
 }
 

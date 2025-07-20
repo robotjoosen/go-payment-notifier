@@ -33,7 +33,8 @@ func main() {
 	soundInstance := sound.New(
 		sound.WithIP(e.OscIP),
 		sound.WithPort(e.OscPort),
-		sound.WithAddress(e.OscAddress),
+		sound.WithPaymentCue(e.OscPaymentCue),
+		sound.WithMutationCue(e.OscMutationCue),
 	)
 	if soundInstance == nil {
 		slog.Error("failed to initialise osc instance")
