@@ -50,8 +50,8 @@ func main() {
 		// TODO: unsure how bunq webhook are formatted,
 		// 			the most generic endpoint is used in this case.
 		// 			improvements might be required
-		"/callbacks/payment":  bunqInstance.Handler(),
-		"/callbacks/mutation": bunqInstance.Handler(),
+		bunq.CallbackPathPayment:  bunqInstance.Handler(),
+		bunq.CallbackPathMutation: bunqInstance.Handler(),
 	})
 	go serverInstance.Run()
 

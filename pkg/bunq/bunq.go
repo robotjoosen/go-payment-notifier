@@ -22,8 +22,8 @@ type Controller struct {
 }
 
 const (
-	callbackPathPayment  = "payment/callback"
-	callbackPathMutation = "mutation/callback"
+	CallbackPathPayment  = "/callbacks/payment"
+	CallbackPathMutation = "/callbacks/mutation"
 )
 
 func New() *Controller {
@@ -111,9 +111,9 @@ func (c *Controller) SetNotificationWebhook() error {
 func (c *Controller) Handler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		switch {
-		case strings.Contains(r.URL.Path, callbackPathPayment):
+		case strings.Contains(r.URL.Path, CallbackPathPayment):
 			c.outputChannel <- domain.PaymentCallbackEvent{} // TODO: add payment data for additional event handling
-		case strings.Contains(r.URL.Path, callbackPathMutation):
+		case strings.Contains(r.URL.Path, CallbackPathMutation):
 			c.outputChannel <- domain.MutationCallbackEvent{} // TODO: add mutaiton data for addiontal event handling
 		}
 
