@@ -21,6 +21,7 @@ const (
 	defaultOSCPaymentCue  = 1
 	defaultOSCMutationCue = 2
 	defaultBunqBaseURL    = bunq.BaseURLProduction
+	defaultBunqIPRange    = "185.40.108.0/22"
 )
 
 type Environment struct {
@@ -31,6 +32,7 @@ type Environment struct {
 	BunqBaseURL    string     `mapstructure:"BUNQ_BASE_URL"`
 	BunqAPIKey     string     `mapstructure:"BUNQ_API_KEY"`
 	BunqAppName    string     `mapstructure:"BUNQ_APP_NAME"`
+	BunqIPRange    string     `mapstructure:"BUNQ_IP_RANGE"`
 	OscIP          string     `mapstructure:"OSC_IP"`
 	OscPort        int        `mapstructure:"OSC_PORT"`
 	OscPaymentCue  string     `mapstructure:"OSC_PAYMENT_CUE"`
@@ -58,6 +60,7 @@ func LoadEnv() Environment {
 		"BUNQ_BASE_URL":    defaultBunqBaseURL,
 		"BUNQ_API_KEY":     "",
 		"BUNQ_APP_NAME":    defaultServiceName,
+		"BUNQ_IP_RANGE":    defaultBunqIPRange,
 		"OSC_IP":           defaultOSCIP,
 		"OSC_PORT":         defaultOSCPort,
 		"OSC_PAYMENT_CUE":  defaultOSCPaymentCue,

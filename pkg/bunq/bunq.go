@@ -7,10 +7,12 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"net/netip"
 	"strings"
 
 	bunqclient "github.com/OGKevin/go-bunq/bunq"
 	"github.com/google/uuid"
+	ip "github.com/vikram1565/request-ip"
 	"gitlab.com/sir-this-is-a-wendys/go-payment-notifier/pkg/domain"
 	"gitlab.com/sir-this-is-a-wendys/go-payment-notifier/pkg/server"
 )
@@ -18,6 +20,7 @@ import (
 type Controller struct {
 	identifier    uuid.UUID
 	outputChannel chan any
+	network       netip.Prefix
 	client        *bunqclient.Client
 }
 
@@ -26,10 +29,14 @@ const (
 	CallbackPathMutation = "/callbacks/mutation"
 )
 
-func New() *Controller {
-	// connect tp bunq
+func New(optionFuncs ...OptionFunc) *Controller {
+	options := getDefaultOptions()
+	for _, optionFunc := range optionFuncs {
+		optionFunc(&options)
+	}
 
 	return &Controller{
+		network:       options.network,
 		outputChannel: make(chan any, 100),
 	}
 }
@@ -110,6 +117,19 @@ func (c *Controller) SetNotificationWebhook() error {
 
 func (c *Controller) Handler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		ip, err := netip.ParseAddr(ip.GetClientIP(r))
+		if err != nil {
+			server.ErrorResponse(w, http.StatusBadRequest, "cant determine request ip address", err.Error())
+
+			return
+		}
+
+		if !c.network.Contains(ip) {
+			server.ErrorResponse(w, http.StatusUnauthorized, "ip not in range", ip.String())
+
+			return
+		}
+
 		switch {
 		case strings.Contains(r.URL.Path, CallbackPathPayment):
 			c.outputChannel <- domain.PaymentCallbackEvent{} // TODO: add payment data for additional event handling

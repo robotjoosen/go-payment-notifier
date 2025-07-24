@@ -23,7 +23,7 @@ func main() {
 
 	slog.Info("using environment", "configuration", e)
 
-	bunqInstance := bunq.New()
+	bunqInstance := bunq.New(bunq.WithIPRange(e.BunqIPRange))
 	if bunqInstance == nil {
 		slog.Error("failed to initialise bunq instance")
 

@@ -1,11 +1,17 @@
 package bunq
 
-import bunqclient "github.com/OGKevin/go-bunq/bunq"
+import (
+	"log/slog"
+	"net/netip"
+
+	bunqclient "github.com/OGKevin/go-bunq/bunq"
+)
 
 type Options struct {
 	baseURL string
 	appName string
 	apiKey  string
+	network netip.Prefix
 }
 
 type OptionFunc func(options *Options)
@@ -33,5 +39,18 @@ func WithAPIKey(key string) OptionFunc {
 func WithAppName(name string) OptionFunc {
 	return func(options *Options) {
 		options.appName = name
+	}
+}
+
+func WithIPRange(network string) OptionFunc {
+	return func(options *Options) {
+		network, err := netip.ParsePrefix(network)
+		if err != nil {
+			slog.Error("invalid ip range given", "err", err.Error())
+
+			return
+		}
+
+		options.network = network
 	}
 }
