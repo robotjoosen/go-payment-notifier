@@ -13,8 +13,8 @@ import (
 	bunqclient "github.com/OGKevin/go-bunq/bunq"
 	"github.com/google/uuid"
 	ip "github.com/vikram1565/request-ip"
-	"gitlab.com/sir-this-is-a-wendys/go-payment-notifier/pkg/domain"
-	"gitlab.com/sir-this-is-a-wendys/go-payment-notifier/pkg/server"
+	"github.com/robotjoosen/go-payment-notifier/pkg/domain"
+	"github.com/robotjoosen/go-payment-notifier/pkg/server"
 )
 
 type Controller struct {

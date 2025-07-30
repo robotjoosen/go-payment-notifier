@@ -4,8 +4,8 @@ import (
 	"log/slog"
 	"os"
 
-	"gitlab.com/sir-this-is-a-wendys/go-payment-notifier/pkg/bunq"
-	"gitlab.com/sir-this-is-a-wendys/go-payment-notifier/pkg/setup"
+	"github.com/robotjoosen/go-payment-notifier/pkg/bunq"
+	"github.com/robotjoosen/go-payment-notifier/pkg/setup"
 )
 
 func main() {

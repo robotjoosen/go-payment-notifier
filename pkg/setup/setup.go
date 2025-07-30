@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/OGKevin/go-bunq/bunq"
-	"gitlab.com/sir-this-is-a-wendys/go-payment-notifier/pkg/env"
+	"github.com/robotjoosen/go-payment-notifier/pkg/env"
 )
 
 const (

@@ -8,13 +8,13 @@ import (
 	"os/signal"
 	"syscall"
 
-	"gitlab.com/sir-this-is-a-wendys/go-payment-notifier/pkg/broadcaster"
-	"gitlab.com/sir-this-is-a-wendys/go-payment-notifier/pkg/bunq"
-	"gitlab.com/sir-this-is-a-wendys/go-payment-notifier/pkg/health"
-	"gitlab.com/sir-this-is-a-wendys/go-payment-notifier/pkg/server"
-	"gitlab.com/sir-this-is-a-wendys/go-payment-notifier/pkg/setup"
-	"gitlab.com/sir-this-is-a-wendys/go-payment-notifier/pkg/shutdown"
-	"gitlab.com/sir-this-is-a-wendys/go-payment-notifier/pkg/sound"
+	"github.com/robotjoosen/go-payment-notifier/pkg/broadcaster"
+	"github.com/robotjoosen/go-payment-notifier/pkg/bunq"
+	"github.com/robotjoosen/go-payment-notifier/pkg/health"
+	"github.com/robotjoosen/go-payment-notifier/pkg/server"
+	"github.com/robotjoosen/go-payment-notifier/pkg/setup"
+	"github.com/robotjoosen/go-payment-notifier/pkg/shutdown"
+	"github.com/robotjoosen/go-payment-notifier/pkg/sound"
 )
 
 func main() {

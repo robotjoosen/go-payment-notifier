@@ -3,7 +3,6 @@ FROM golang:1.24 as builder
 ARG BUILD_NAME
 ARG BUILD_VERSION
 ARG BUILD_COMMIT
-ARG BUILD_TARGET
 
 ENV TZ=Etc/UCT
 ENV GO111MODULE=on
@@ -23,7 +22,7 @@ RUN go build \
     -X 'main.buildCommit=$BUILD_COMMIT' \
     " \
     -trimpath \
-    -o app $BUILD_TARGET
+    -o app ./cmd/notifier
 
 WORKDIR /dist
 

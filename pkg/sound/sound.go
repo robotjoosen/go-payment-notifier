@@ -6,7 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/hypebeast/go-osc/osc"
-	"gitlab.com/sir-this-is-a-wendys/go-payment-notifier/pkg/domain"
+	"github.com/robotjoosen/go-payment-notifier/pkg/domain"
 )
 
 const cueStartPath = "/cue/%s/start"

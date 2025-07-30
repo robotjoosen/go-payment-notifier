@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	"gitlab.com/sir-this-is-a-wendys/go-payment-notifier/pkg/server"
+	"github.com/robotjoosen/go-payment-notifier/pkg/server"
 )
 
 type Handler struct{}
