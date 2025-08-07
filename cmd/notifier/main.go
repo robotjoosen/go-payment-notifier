@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 	"net/http"
 	"os"
@@ -10,6 +11,7 @@ import (
 
 	"github.com/robotjoosen/go-payment-notifier/pkg/broadcaster"
 	"github.com/robotjoosen/go-payment-notifier/pkg/bunq"
+	"github.com/robotjoosen/go-payment-notifier/pkg/cue"
 	"github.com/robotjoosen/go-payment-notifier/pkg/health"
 	"github.com/robotjoosen/go-payment-notifier/pkg/server"
 	"github.com/robotjoosen/go-payment-notifier/pkg/setup"
@@ -18,10 +20,11 @@ import (
 )
 
 func main() {
+	c := setup.LoadConfig()
 	e := setup.LoadEnv()
 	setup.InitLog(e.LogLevel)
 
-	slog.Info("using environment", "configuration", e)
+	slog.Info("using setup", "environment", e, "config", c)
 
 	bunqInstance := bunq.New(bunq.WithIPRange(e.BunqIPRange))
 	if bunqInstance == nil {
@@ -43,16 +46,25 @@ func main() {
 	}
 
 	ctx, cancel := context.WithCancel(context.Background())
-	serverInstance := server.New(e.ServerPort, map[string]http.HandlerFunc{
+
+	endpoints := map[string]http.HandlerFunc{
 		"GET /health":   health.New().Handler(),
 		"GET /shutdown": shutdown.New().Handler(cancel),
+	}
 
-		// TODO: unsure how bunq webhook are formatted,
-		// 			the most generic endpoint is used in this case.
-		// 			improvements might be required
-		bunq.CallbackPathPayment:  bunqInstance.Handler(),
-		bunq.CallbackPathMutation: bunqInstance.Handler(),
-	})
+	// TODO: unsure how bunq webhook are formatted,
+	// 			the most generic endpoint is used in this case.
+	// 			improvements might be required
+	endpoints[bunq.CallbackPathPayment] = bunqInstance.Handler()
+	endpoints[bunq.CallbackPathMutation] = bunqInstance.Handler()
+
+	cueInstance := cue.New()
+	for _, e := range c.Endpoints {
+		cueInstance.AddEndpoint(e.Path, e.Cue)
+		endpoints[fmt.Sprintf("GET %s", e.Path)] = cueInstance.Handler()
+	}
+
+	serverInstance := server.New(e.ServerPort, endpoints)
 	go serverInstance.Run()
 
 	// connect services to internal message bus
@@ -63,6 +75,7 @@ func main() {
 		os.Exit(1)
 	}
 	actorEngine.BulkAdd(
+		cueInstance,
 		bunqInstance,
 		soundInstance,
 	)

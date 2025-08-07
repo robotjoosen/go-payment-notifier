@@ -49,7 +49,23 @@ func (c *Controller) Identifier() uuid.UUID {
 }
 
 func (c *Controller) Input(msg any) {
-	switch msg.(type) {
+	switch m := msg.(type) {
+	case domain.CueEvent:
+		msg := osc.NewMessage(m.Cue)
+
+		if err := c.client.Send(msg); err != nil {
+			slog.Error("send failed",
+				slog.String("err", err.Error()),
+				slog.Any("msg", msg),
+			)
+
+			return
+		}
+
+		slog.Info("Event triggered",
+			slog.Any("msg", msg),
+		)
+
 	case domain.PaymentCallbackEvent:
 		msg := osc.NewMessage(fmt.Sprintf(cueStartPath, c.paymentCue))
 

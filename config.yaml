@@ -1,0 +1,9 @@
+endpoints:
+  - path: /api/donut/rocket
+    cue: /cue/1/start
+  - path: /api/cookie/donkey
+    cue: /cue/2/start
+  - path: /api/piepie
+    cue: /cue/3/start
+  - path: /api/poopoo
+    cue: /cue/4/start

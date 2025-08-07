@@ -6,6 +6,7 @@ import (
 
 	"github.com/OGKevin/go-bunq/bunq"
 	"github.com/robotjoosen/go-payment-notifier/pkg/env"
+	"gopkg.in/yaml.v3"
 )
 
 const (
@@ -39,6 +40,15 @@ type Environment struct {
 	OscMutationCue string     `mapstructure:"OSC_MUTATION_CUE"`
 }
 
+type Config struct {
+	Endpoints []Endpoints `yaml:"endpoints"`
+}
+
+type Endpoints struct {
+	Path string `yaml:"path"`
+	Cue  string `yaml:"cue"`
+}
+
 func InitLog(level slog.Level) {
 	hostname, err := os.Hostname()
 	if err != nil {
@@ -49,6 +59,26 @@ func InitLog(level slog.Level) {
 		With(
 			slog.String("hostname", hostname),
 		))
+}
+
+func LoadConfig() Config {
+	c := Config{
+		Endpoints: make([]Endpoints, 0),
+	}
+
+	f, err := os.ReadFile("config.yaml")
+	if err != nil {
+		slog.Error("config file not found", "err", err.Error())
+
+		return c
+	}
+
+	err = yaml.Unmarshal(f, &c)
+	if err != nil {
+		slog.Error("failed to unmarshal config file", "err", err.Error())
+	}
+
+	return c
 }
 
 func LoadEnv() Environment {
