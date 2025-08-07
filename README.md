@@ -12,18 +12,32 @@ Play a sounds when a payment is done
 ## Run
 
 1. Create `.env` by copying `.env.dist`
+
   ``` shell
   cp .env.dist .env
   ```
+
 2. Start notifier
-  - Docker: 
+
+- Docker:
+
     ``` shell
     make docker-run
     ```
-  - Binary:
+
+- Binary:
+
     ``` shell
     ./bin/notifier
     ```
+
+## Custom endpoint
+
+To create custom endpoints which trigger a specific cue, copy the configuration sample and have fun.
+
+```
+cp config.sample.yaml config.yaml
+```
 
 ## Interact
 
@@ -33,4 +47,3 @@ Play a sounds when a payment is done
 | `/shutdown` | gracefuly shutdown service through endpoint |
 | `/callbacks/payment` | callback endpoint for handling bunq payment callbacks |
 | `/callbacks/mutation` | callback endpoint for handling bunq mutation callbacks |
-
